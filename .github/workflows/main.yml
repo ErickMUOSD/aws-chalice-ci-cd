@@ -10,13 +10,13 @@ jobs:
     outputs:
       AWS_REGION:  ${{ steps.condition.outputs.aws_region }}
       STAGE:  ${{ steps.condition.outputs.stage }}
-      AWS_ACCESS_KEY_ID:  ${{ steps.condition.outputs.aws_acess_key_id }}
+      AWS_ACCESS_KEY_ID:  ${{ steps.condition.outputs.aws_access_key_id }}
       AWS_SECRET_ACCESS_KEY:  ${{ steps.condition.outputs.aws_secret_access_key }}
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
         run: |
-          if [ ${{ github.ref }} == 'refs/heads/production' ]; then
+          if [ ${{ github.ref }} == 'refs/heads/main' ]; then
             echo "Prod branch!"
             echo "aws_region=us-west-2" >> $GITHUB_OUTPUT
             echo "stage=prod" >> $GITHUB_OUTPUT 
@@ -30,7 +30,10 @@ jobs:
             echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}" >> $GITHUB_OUTPUT 
           fi
         shell: bash
-
+      - name: Check variables
+        run: |
+          echo "Region   ${{ steps.condition.outputs.aws_region }} Stage   ${{ steps.condition.outputs.aws_region }}"
+          echo "Aws Key Id ${{ steps.condition.outputs.aws_access_key_id }} Aws Secret   ${{ steps.condition.outputs.aws_secret_access_key }} "
   build:
     env:
         STAGE:   ${{needs.setup.outputs.STAGE}}
