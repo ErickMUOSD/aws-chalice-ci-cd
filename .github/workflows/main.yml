@@ -38,8 +38,8 @@ jobs:
         shell: bash
       - name: Check variables
         run: |
-          echo "Region   ${{ steps.condition.outputs.AWS_REGION }} Stage   ${{ steps.condition.outputs.STAGE }}"
-          echo "Aws Key Id ${{ steps.condition.outputs.AWS_ACCESS_KEY_ID }} Aws Secret   ${{ steps.condition.outputs.AWS_SECRET_ACCESS_KEY }} "
+          echo "Region: ${{ steps.condition.outputs.aws_region }} Stage: ${{ steps.condition.outputs.stage }}"
+          echo "Aws Key Id: ${{ steps.condition.outputs.aws_access_key_id }} Aws Secret: ${{ steps.condition.outputs.aws_secret_access_key }}"
   build:
     env:
         STAGE:   ${{needs.setup-credentials.outputs.STAGE}}
