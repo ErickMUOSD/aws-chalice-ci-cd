@@ -24,16 +24,16 @@ jobs:
         run: |
           if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
             echo "Prod branch!"
-            echo "aws_region=us-west-2" >> "$GITHUB_ENV"
-            echo "stage=prod" >> "$GITHUB_ENV"
-            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_PROD" >> "$GITHUB_ENV"
-            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_PROD" >> "$GITHUB_ENV"
+            echo "aws_region=us-west-2" >> "$GITHUB_OUTPUT"
+            echo "stage=prod" >> "$GITHUB_OUTPUT"
+            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_PROD" >> "$GITHUB_OUTPUT"
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_PROD" >> "$GITHUB_OUTPUT"
           else
             echo "Dev branch!"
-            echo "aws_region=us-east-1" >> "$GITHUB_ENV"
-            echo "stage=dev" >> "$GITHUB_ENV"
-            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_DEV" >> "$GITHUB_ENV"
-            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_DEV" >> "$GITHUB_ENV"
+            echo "aws_region=us-east-1" >> "$GITHUB_OUTPUT"
+            echo "stage=dev" >> "$GITHUB_OUTPUT"
+            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_DEV" >> "$GITHUB_OUTPUT"
+            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_DEV" >> "$GITHUB_OUTPUT"
           fi
         shell: bash
       - name: Check variables
