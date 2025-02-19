@@ -1,0 +1,50 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: ['main', 'development']
+
+jobs:
+  setup-credentials:
+    runs-on: ubuntu-latest
+    outputs:
+      AWS_REGION:  ${{ steps.condition.outputs.aws_region }}
+      STAGE:  ${{ steps.condition.outputs.stage }}
+      AWS_ACCESS_KEY_ID:  ${{ steps.condition.outputs.aws_acess_key_id }}
+      AWS_SECRET_ACCESS_KEY:  ${{ steps.condition.outputs.aws_secret_access_key }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set variables
+        run: |
+          if [ ${{ github.ref }} == 'refs/heads/production' ]; then
+            echo "Prod branch!"
+            echo "aws_region=us-west-2" >> $GITHUB_OUTPUT
+            echo "stage=prod" >> $GITHUB_OUTPUT 
+            echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID_PROD }}" >> $GITHUB_OUTPUT 
+            echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}" >> $GITHUB_OUTPUT 
+          else
+            echo "Dev branch!"
+           echo "aws_region=us-east-1" >> $GITHUB_OUTPUT
+            echo "stage=dev" >> $GITHUB_OUTPUT 
+            echo "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID_DEV }}" >> $GITHUB_OUTPUT 
+            echo "aws_secret_access_key=${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}" >> $GITHUB_OUTPUT 
+          fi
+        shell: bash
+
+  build:
+    env:
+        STAGE:   ${{needs.setup.outputs.STAGE}}
+    runs-on: ubuntu-latest
+    needs: setup-credentials
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: chalice deploy
+        uses: 5tigerjelly/chalice-action@master
+        with:
+          args: deploy --stage ${{env.STAGE}}
+        env:
+          AWS_ACCESS_KEY_ID:  ${{needs.setup.outputs.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY:  ${{needs.setup.outputs.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION:  ${{needs.setup.outputs.AWS_REGION}}
+
