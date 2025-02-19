@@ -55,5 +55,5 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID:  ${{needs.setup-credentials.outputs.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY:  ${{needs.setup-credentials.outputs.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION:  ${{needs.setup.setup-credentials.AWS_REGION}}
+          AWS_DEFAULT_REGION:  ${{needs.setup-credentials.outputs.AWS_REGION}}
 
