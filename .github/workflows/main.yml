@@ -33,11 +33,11 @@ jobs:
         shell: bash
       - name: Check variables
         run: |
-          echo "Region   ${{ steps.condition.outputs.aws_region }} Stage   ${{ steps.condition.outputs.aws_region }}"
+          echo "Region   ${{ steps.condition.outputs.aws_region }} Stage   ${{ steps.condition.outputs.stage }}"
           echo "Aws Key Id ${{ steps.condition.outputs.aws_access_key_id }} Aws Secret   ${{ steps.condition.outputs.aws_secret_access_key }} "
   build:
     env:
-        STAGE:   ${{needs.setup.outputs.STAGE}}
+        STAGE:   ${{needs.setup-credentials.outputs.STAGE}}
     runs-on: ubuntu-latest
     needs: setup-credentials
     steps:
@@ -48,7 +48,7 @@ jobs:
         with:
           args: deploy --stage ${{env.STAGE}}
         env:
-          AWS_ACCESS_KEY_ID:  ${{needs.setup.outputs.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY:  ${{needs.setup.outputs.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION:  ${{needs.setup.outputs.AWS_REGION}}
+          AWS_ACCESS_KEY_ID:  ${{needs.setup-credentials.outputs.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY:  ${{needs.setup-credentials.outputs.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION:  ${{needs.setup.setup-credentials.AWS_REGION}}
 
