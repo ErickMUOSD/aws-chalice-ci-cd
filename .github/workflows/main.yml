@@ -43,11 +43,12 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
       - name: chalice deploy
-        uses: 5tigerjelly/chalice-action@master
-        with:
-          args: deploy --stage ${{env.STAGE}}
+        uses: jayef0/chalice-extended-action@release-v0.2.1
         env:
+          WORKING_DIRECTORY: backend/chalice
+          REQUIREMENTS_FILE: requirements.prod.txt
+          OPERATION: deploy
+          STAGE: ${{env.STAGE}}
           AWS_ACCESS_KEY_ID:  ${{secrets.AWS_ACCESS_KEY_ID_DEV}}
           AWS_SECRET_ACCESS_KEY:  ${{secrets.AWS_SECRET_ACCESS_KEY_DEV}}
           AWS_DEFAULT_REGION:  ${{needs.setup-credentials.outputs.AWS_REGION}}
-
