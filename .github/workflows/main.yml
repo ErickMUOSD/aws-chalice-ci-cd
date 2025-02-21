@@ -10,36 +10,24 @@ jobs:
     outputs:
       AWS_REGION:  ${{ steps.condition.outputs.aws_region }}
       STAGE:  ${{ steps.condition.outputs.stage }}
-      AWS_ACCESS_KEY_ID:  ${{ steps.condition.outputs.aws_access_key_id }}
-      AWS_SECRET_ACCESS_KEY:  ${{ steps.condition.outputs.aws_secret_access_key }}
     steps:
       - uses: actions/checkout@v2
       - name: Set variables
         id: condition
-        env:
-          AWS_ACCESS_KEY_ID_PROD: ${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
-          AWS_SECRET_ACCESS_KEY_PROD: ${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
-          AWS_ACCESS_KEY_ID_DEV: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          AWS_SECRET_ACCESS_KEY_DEV: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
         run: |
           if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
             echo "Prod branch!"
-            echo "aws_region=us-west-2" >> "$GITHUB_OUTPUT"
+            echo "aws_region=us-east-1" >> "$GITHUB_OUTPUT"
             echo "stage=prod" >> "$GITHUB_OUTPUT"
-            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_PROD" >> "$GITHUB_OUTPUT"
-            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_PROD" >> "$GITHUB_OUTPUT"
           else
             echo "Dev branch!"
             echo "aws_region=us-east-1" >> "$GITHUB_OUTPUT"
             echo "stage=dev" >> "$GITHUB_OUTPUT"
-            echo "aws_access_key_id=$AWS_ACCESS_KEY_ID_DEV" >> "$GITHUB_OUTPUT"
-            echo "aws_secret_access_key=$AWS_SECRET_ACCESS_KEY_DEV" >> "$GITHUB_OUTPUT"
           fi
         shell: bash
       - name: Check variables
         run: |
           echo "Region: ${{ steps.condition.outputs.aws_region }} Stage: ${{ steps.condition.outputs.stage }}"
-          echo "Aws Key Id: ${{ steps.condition.outputs.aws_access_key_id }} Aws Secret: ${{ steps.condition.outputs.aws_secret_access_key }}"
   build:
     env:
         STAGE:   ${{needs.setup-credentials.outputs.STAGE}}
@@ -53,7 +41,7 @@ jobs:
         with:
           args: deploy --stage ${{env.STAGE}}
         env:
-          AWS_ACCESS_KEY_ID:  ${{needs.setup-credentials.outputs.AWS_ACCESS_KEY_ID}}
-          AWS_SECRET_ACCESS_KEY:  ${{needs.setup-credentials.outputs.AWS_SECRET_ACCESS_KEY}}
-          AWS_DEFAULT_REGION:  ${{needs.setup-credentials.outputs.AWS_REGION}}
+          AWS_ACCESS_KEY_ID:  ${{env.AWS_ACCESS_KEY_ID_DEV}}
+          AWS_SECRET_ACCESS_KEY:  ${{env.AWS_SECRET_ACCESS_KEY_DEV}}
+          AWS_DEFAULT_REGION:  ${{env.AWS_REGION}}
 
