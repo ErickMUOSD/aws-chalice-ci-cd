@@ -45,8 +45,8 @@ jobs:
       - name: chalice deploy
         uses: jayef0/chalice-extended-action@release-v0.2.1
         env:
-          WORKING_DIRECTORY: backend/chalice
-          REQUIREMENTS_FILE: requirements.prod.txt
+          WORKING_DIRECTORY: ./
+          REQUIREMENTS_FILE: requirements.txt
           OPERATION: deploy
           STAGE: ${{env.STAGE}}
           AWS_ACCESS_KEY_ID:  ${{secrets.AWS_ACCESS_KEY_ID_DEV}}
