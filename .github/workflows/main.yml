@@ -48,6 +48,8 @@ jobs:
           python -m venv /tmp/venv3
           echo "VIRTUAL_ENV=/tmp/venv3" >> $GITHUB_ENV
           echo "/tmp/venv3/bin" >> $GITHUB_PATH
+          source /tmp/venv3/bin/activate
+
       - name: chalice deploy
         uses: jayef0/chalice-extended-action@release-v0.2.1
         env:
